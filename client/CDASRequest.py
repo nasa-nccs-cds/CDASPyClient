@@ -121,7 +121,7 @@ class CDASDemo:
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain( exeReq, levelIndex, 'd0' )
         cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
-        cls.executeRequest(exeReq, "CDS", "aggregate", [ "v0"], { "axes":"t", "bins": "t|year|ave|year" } )
+        cls.executeRequest(exeReq, "CDS", "aggregate", [ "v0"], { "axes":"t", "bins": "t|month|ave|year" } )
 
     @classmethod
     def executeSpatialAve(cls, levelIndex):
