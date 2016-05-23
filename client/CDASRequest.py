@@ -113,7 +113,7 @@ class CDASDemo:
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain( exeReq, levelIndex, 'd0' )
         cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
-        cls.executeRequest(exeReq, "CDS", "aggregate", [ "v0"], { "axes":"t", "bins": "t|year|ave" } )
+        cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], {  "period":"12", "unit":"month" } )
 
     @classmethod
     def executeYearlyCycle(cls, levelIndex):
@@ -121,7 +121,15 @@ class CDASDemo:
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain( exeReq, levelIndex, 'd0' )
         cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
-        cls.executeRequest(exeReq, "CDS", "aggregate", [ "v0"], { "axes":"t", "bins": "t|month|ave|year" } )
+        cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], { "period":"1", "unit":"month", "mod":"12" } )
+
+    @classmethod
+    def executeSeasonalCycle(cls, levelIndex):
+        cls.executeCacheRequest(levelIndex)
+        exeReq = CDASExecuteRequest(server,port)
+        cls.getTimeseriesDomain( exeReq, levelIndex, 'd0' )
+        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], { "period":"3", "unit":"month", "mod":"4", "offset":"2"   } )
 
     @classmethod
     def executeSpatialAve(cls, levelIndex):
