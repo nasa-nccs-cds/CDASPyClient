@@ -142,6 +142,6 @@ class CDASDemo:
 
 if __name__ == "__main__":
     levelIndex = 3
-    CDASDemo.executeYearlyMeans(levelIndex)
+    CDASDemo.executeColumnSum()
 
 

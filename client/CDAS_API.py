@@ -46,16 +46,17 @@ class Operation:
         self._result_id = result_id
         self._package = package
         self._kernel = kernel
-        self._args = args
+        self._args =  {}
+        for item in args.iteritems(): self._args[ '"' + item[0] + '"'] = '"' + item[1] + '"'
         self._input_uids = input_uids
+        self._args['"input"'] = "%s" % ( ",".join( [ '"%s"' % item  for item in input_uids ] )  )
+        self._args['"name"'] = '"' + self.getIdentifier() + '"'
+        if result_id: self._args['"rid"'] = '"' + result_id + '"'
 
     def getIdentifier(self): return '%s.%s' % ( self._package, self._kernel )
 
     def toWps(self):
-        call_signature = ( '%s:' % ( self._result_id ) if self._result_id else '' ) + self.getIdentifier()
-        inputs = ",".join(self._input_uids)
-        args = ",".join( [ ('%s:%s' % ( key, value )) for key, value in self._args.iteritems()] )
-        return "%s(%s,%s)" % ( call_signature, inputs, args )
+        return "{%s}" % ( ",".join( [ '%s:%s' % (item[0],item[1])  for item in self._args.iteritems() ] )  )
 
 def boolStr( bval ): return "true" if bval else "false"
 
@@ -85,7 +86,7 @@ class CDASExecuteRequest:
         return 'variable=[%s]' % ( ",".join( [ variable.toWps() for variable in self._variables ] )  )
 
     def _getOperations( self ):
-        return 'operation="%s"' % ( ",".join( [ operation.toWps() for operation in self._operations ] )  )
+        return 'operation=[%s]' % ( ",".join( [ operation.toWps() for operation in self._operations ] )  )
 
     def addInputVariable( self, v ): self._variables.append( v )
 
