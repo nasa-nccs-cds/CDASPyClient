@@ -1,4 +1,4 @@
-from CDAS_API import *
+from nasa.cds2.client.CDAS_API import *
 
 server = "localhost"
 port = 9000
