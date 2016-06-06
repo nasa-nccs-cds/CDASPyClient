@@ -139,9 +139,19 @@ class CDASDemo:
         cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
         cls.executeRequest(exeReq, "CDS", "average", [ "v0"], { "axes":"xy", "weights": "cosine" } )
 
+    @classmethod
+    def executeGetCapabilities(cls):
+        exeReq = CDASExecuteRequest(server,port)
+        cls.executeRequest(exeReq, "CDS", "metadata", [] )
+
+    @classmethod
+    def listCollections(cls):
+        exeReq = CDASExecuteRequest(server,port)
+        cls.executeRequest(exeReq, "CDS", "metadata", [] )
+
 
 if __name__ == "__main__":
     levelIndex = 3
-    CDASDemo.executeColumnSum()
+    CDASDemo.executeGetCapabilities()
 
 

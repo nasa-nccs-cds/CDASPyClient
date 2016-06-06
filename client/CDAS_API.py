@@ -69,6 +69,9 @@ class CDASExecuteRequest:
         self._domains = []
         self._operations = []
 
+    def  _getCapabilities( self ): return 'http://%s:%s/wps?request=getcapabilities&service=cds2' % ( self._server, self._port )
+    def  _describeProcess( self, processId ): return 'http://%s:%s/wps?request=describeprocess&identifier=%s&service=cds2' % ( self._server, self._port, processId )
+
     def _getBaseRequest( self, async ): return 'http://%s:%s/wps?request=Execute&service=cds2&status=%s' % ( self._server, self._port, boolStr(async) )
 
     def _getIdentifier(self ):
@@ -100,5 +103,13 @@ class CDASExecuteRequest:
     def execute( self, async ):
         request = self.toWps(async)
         print "\nExecuting Request:\n\n%s\n\nResponse:\n" % ( request )
+        return execRequest( request )
+
+    def getCapabilities( self ):
+        request = self._getCapabilities()
+        return execRequest( request )
+
+    def describeProcess( self, processId ):
+        request = self._describeProcess( processId )
         return execRequest( request )
 
