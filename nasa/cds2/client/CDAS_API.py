@@ -70,6 +70,8 @@ class CDASExecuteRequest:
         self._operations = []
 
     def _getBaseRequest( self, async ): return 'http://%s:%s/wps?request=Execute&service=cds2&status=%s' % ( self._server, self._port, boolStr(async) )
+    def _getCapabilities( self ): return 'http://%s:%s/wps?request=getCapabilities&service=cds2' % ( self._server, self._port )
+    def _describeProcess( self, processId ): return 'http://%s:%s/wps?request=describeProcess&service=cds2&identifier=%s' % ( self._server, self._port, processId )
 
     def _getIdentifier(self ):
         if   len( self._operations ) == 0: return '&identifier=util.cache'
@@ -100,5 +102,13 @@ class CDASExecuteRequest:
     def execute( self, async ):
         request = self.toWps(async)
         print "\nExecuting Request:\n\n%s\n\nResponse:\n" % ( request )
+        return execRequest( request )
+
+    def getCapabilities( self ):
+        request = self._getCapabilities
+        return execRequest( request )
+
+    def describeProcess( self, processId ):
+        request = self._describeProcess( processId )
         return execRequest( request )
 
