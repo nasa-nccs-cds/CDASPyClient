@@ -10,7 +10,8 @@ class ResultVariable:
 
     def axes(self): return self._dom.getElementsByTagName('axis')
 
-def execRequest( requestURL ): return ResultVariable( xml.dom.minidom.parseString( urllib2.urlopen( requestURL ).read() ) )
+def execRequest( requestURL ):
+    return ResultVariable( xml.dom.minidom.parseString( urllib2.urlopen( requestURL ).read() ) )
 
 class Variable:
     def __init__( self, uid, uri, varname, domain_id ):
@@ -105,7 +106,7 @@ class CDASExecuteRequest:
         return execRequest( request )
 
     def getCapabilities( self ):
-        request = self._getCapabilities
+        request = self._getCapabilities()
         return execRequest( request )
 
     def describeProcess( self, processId ):

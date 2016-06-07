@@ -148,12 +148,14 @@ class CDASDemo:
     @classmethod
     def getCapabilities(cls):
         exeReq = CDASExecuteRequest(server,port)
-        exeReq.getCapabilities()
+        result = exeReq.getCapabilities()
+        print result
 
     @classmethod
     def describeProcess(cls, processName ):
         exeReq = CDASExecuteRequest(server,port)
-        exeReq.describeProcess( processName )
+        result = exeReq.describeProcess( processName )
+        print result
 
     @classmethod
     def listCollections(cls ):
@@ -161,7 +163,6 @@ class CDASDemo:
         cls.executeRequest(exeReq, "CDS", "metadata", [] )
 
 if __name__ == "__main__":
-    levelIndex = 3
-    CDASDemo.executeCacheRequest()
+    CDASDemo.describeProcess("CDS.min")
 
 
