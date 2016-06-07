@@ -9,7 +9,7 @@ class CDASDemo:
     def getTimeseriesDomain( cls, exeReq, id ):
         d = Domain(id=id)
         lat = Axis( id="lat", start=20, end=20, system="values")
-        lon = Axis( id="lon", start=300, end=300, system="values")
+        lon = Axis( id="lon", start=20, end=20, system="values")
         for axis in [lat,lon]: d.addAxis ( axis )
         exeReq.addDomain( d )
         return d
@@ -70,7 +70,7 @@ class CDASDemo:
     @classmethod
     def executeCacheRequest( cls ):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getCacheSpatialDomain( exeReq, 280, 320, 0.0, 40.0, 'dc' )
+        cls.getCacheSpatialDomain( exeReq, 0.0, 40.0, 0.0, 40.0, 'dc' )
         cls.getMerraLandVariable( exeReq, "v0", "SFMC", "dc" )
         cls.executeRequest( exeReq, "util", "cache", [ "v0"] )
 
