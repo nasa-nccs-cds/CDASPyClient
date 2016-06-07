@@ -43,8 +43,23 @@ class CDASDemo:
         return d
 
     @classmethod
+    def getCacheSpatialDomain( cls, exeReq, lon0, lon1, lat0, lat1, id ):
+        d = Domain(id=id)
+        lat = Axis( id="lat", start=lat0, end=lat1, system="values")
+        lon = Axis( id="lon", start=lon0, end=lon1, system="values")
+        for axis in [lat,lon]: d.addAxis ( axis )
+        exeReq.addDomain( d )
+        return d
+
+    @classmethod
     def getMerraAtmosVariable( cls, exeReq, uId, varId, domainId ):
         v = Variable( uid=uId, uri="collection://MERRA/mon/atmos", varname=varId, domain_id=domainId )
+        exeReq.addInputVariable( v )
+        return v
+
+    @classmethod
+    def getMerraLandVariable( cls, exeReq, uId, varId, domainId ):
+        v = Variable( uid=uId, uri="collection://merra2/mon/M2TMNXLND", varname=varId, domain_id=domainId )
         exeReq.addInputVariable( v )
         return v
 
@@ -55,10 +70,10 @@ class CDASDemo:
         print exeReq.execute( async=run_async )
 
     @classmethod
-    def executeCacheRequest(cls, levelIndex ):
+    def executeCacheRequest( cls ):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getCacheDomain( exeReq, levelIndex, 'dc' )
-        cls.getMerraAtmosVariable( exeReq, "v0", "ta", "dc" )
+        cls.getCacheSpatialDomain( exeReq, 280, 320, 0.0, 40.0, 'dc' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "dc" )
         cls.executeRequest( exeReq, "util", "cache", [ "v0"] )
 
     @classmethod
@@ -156,6 +171,6 @@ class CDASDemo:
 
 if __name__ == "__main__":
     levelIndex = 3
-    CDASDemo.executeColumnSum()
+    CDASDemo.executeCacheRequest()
 
 
