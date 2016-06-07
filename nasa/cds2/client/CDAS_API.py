@@ -30,7 +30,7 @@ class Domain:
     def addAxis( self,  a ): self._axes.append( a )
 
     def toWps(self):
-        return '{"name":"%s",%s}' % ( self._id, ",".join([axis.toWps() for axis in self._axes]) )
+        return ('{"name":"%s",%s}' % ( self._id, ",".join([axis.toWps() for axis in self._axes]))) if len(self._axes) else ('{"name":"%s"}' % ( self._id ))
 
 class Axis:
     def __init__( self, id, start, end, system ):

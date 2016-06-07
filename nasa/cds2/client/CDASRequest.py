@@ -33,10 +33,16 @@ class CDASDemo:
         return d
 
     @classmethod
-    def getCacheDomain( cls, exeReq, id ):
+    def getCacheDomain( cls, exeReq, levelIndex, id ):
         d = Domain(id=id)
         lev = Axis( id="lev", start=levelIndex, end=levelIndex, system="indices")
         d.addAxis ( lev )
+        exeReq.addDomain( d )
+        return d
+
+    @classmethod
+    def getCacheDomain( cls, exeReq, id ):
+        d = Domain(id=id)
         exeReq.addDomain( d )
         return d
 
@@ -70,15 +76,15 @@ class CDASDemo:
     @classmethod
     def executeCacheRequest( cls ):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getCacheSpatialDomain( exeReq, 0.0, 40.0, 0.0, 40.0, 'dc' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "dc" )
+        cls.getCacheDomain( exeReq, 'dc' )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "dc" )
         cls.executeRequest( exeReq, "util", "cache", [ "v0"] )
 
     @classmethod
     def executeAnomaly(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain(exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "anomaly", [ "v0"], { "axes":"t" } )
 
     @classmethod
@@ -100,49 +106,49 @@ class CDASDemo:
     def executeSpatialMax(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getSpatialDomain(exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "max", [ "v0"], { "axes":"xy" } )
 
     @classmethod
     def executeTemporalMin(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain(exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "min", [ "v0"], { "axes":"t" } )
 
     @classmethod
     def executeColumnSum(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getColumnDomain(exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "sum", [ "v0"], { "axes":"z" } )
 
     @classmethod
     def executeYearlyMeans(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain( exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], {  "period":"12", "unit":"month" } )
 
     @classmethod
     def executeYearlyCycle(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain( exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], { "period":"1", "unit":"month", "mod":"12" } )
 
     @classmethod
     def executeSeasonalCycle(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain( exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], { "period":"3", "unit":"month", "mod":"4", "offset":"2"   } )
 
     @classmethod
     def executeSpatialAve(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getSpatialDomain( exeReq, 'd0' )
-        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "d0" )
         cls.executeRequest(exeReq, "CDS", "average", [ "v0"], { "axes":"xy", "weights": "cosine" } )
 
     @classmethod
@@ -163,6 +169,6 @@ class CDASDemo:
         cls.executeRequest(exeReq, "CDS", "metadata", [] )
 
 if __name__ == "__main__":
-    CDASDemo.describeProcess("CDS.min")
+    CDASDemo.executeAnomaly()
 
 
