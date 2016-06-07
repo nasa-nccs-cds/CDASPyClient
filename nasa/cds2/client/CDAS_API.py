@@ -49,7 +49,7 @@ class Operation:
         self._args =  {}
         for item in args.iteritems(): self._args[ '"' + item[0] + '"'] = '"' + item[1] + '"'
         self._input_uids = input_uids
-        self._args['"input"'] = "%s" % ( ",".join( [ '"%s"' % item  for item in input_uids ] )  )
+        if len(input_uids): self._args['"input"'] = "%s" % ( ",".join( [ '"%s"' % item  for item in input_uids ] )  )
         self._args['"name"'] = '"' + self.getIdentifier() + '"'
         if result_id: self._args['"rid"'] = '"' + result_id + '"'
 
