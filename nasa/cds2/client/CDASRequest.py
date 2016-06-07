@@ -6,21 +6,19 @@ port = 9000
 class CDASDemo:
 
     @classmethod
-    def getTimeseriesDomain( cls, exeReq, levelIndex, id ):
+    def getTimeseriesDomain( cls, exeReq, id ):
         d = Domain(id=id)
-        lat = Axis( id="lat", start=45, end=45, system="values")
-        lon = Axis( id="lon", start=30, end=30, system="values")
-        lev = Axis( id="lev", start=levelIndex, end=levelIndex, system="indices")
-        for axis in [lat,lon,lev]: d.addAxis ( axis )
+        lat = Axis( id="lat", start=20, end=20, system="values")
+        lon = Axis( id="lon", start=300, end=300, system="values")
+        for axis in [lat,lon]: d.addAxis ( axis )
         exeReq.addDomain( d )
         return d
 
     @classmethod
-    def getSpatialDomain( cls, exeReq, levelIndex, id ):
+    def getSpatialDomain( cls, exeReq, id ):
         d = Domain(id=id)
         time = Axis( id="time", start=4, end=4, system="indices")
-        lev = Axis( id="lev", start=levelIndex, end=levelIndex, system="indices")
-        for axis in [time,lev]: d.addAxis ( axis )
+        for axis in [time]: d.addAxis ( axis )
         exeReq.addDomain( d )
         return d
 
@@ -35,7 +33,7 @@ class CDASDemo:
         return d
 
     @classmethod
-    def getCacheDomain( cls, exeReq, levelIndex, id ):
+    def getCacheDomain( cls, exeReq, id ):
         d = Domain(id=id)
         lev = Axis( id="lev", start=levelIndex, end=levelIndex, system="indices")
         d.addAxis ( lev )
@@ -77,11 +75,10 @@ class CDASDemo:
         cls.executeRequest( exeReq, "util", "cache", [ "v0"] )
 
     @classmethod
-    def executeAnomalyConcise(cls, levelIndex):
-        cls.executeCacheRequest(levelIndex)
+    def executeAnomaly(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getTimeseriesDomain(exeReq, levelIndex, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getTimeseriesDomain(exeReq, 'd0' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "anomaly", [ "v0"], { "axes":"t" } )
 
     @classmethod
@@ -100,58 +97,52 @@ class CDASDemo:
         print exeReq.execute( async=False )
 
     @classmethod
-    def executeSpatialMax(cls, levelIndex):
-        cls.executeCacheRequest(levelIndex)
+    def executeSpatialMax(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getSpatialDomain(exeReq, levelIndex, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getSpatialDomain(exeReq, 'd0' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "max", [ "v0"], { "axes":"xy" } )
 
     @classmethod
-    def executeTemporalMin(cls, levelIndex):
-        cls.executeCacheRequest(levelIndex)
+    def executeTemporalMin(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getTimeseriesDomain(exeReq, levelIndex, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getTimeseriesDomain(exeReq, 'd0' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "min", [ "v0"], { "axes":"t" } )
 
     @classmethod
     def executeColumnSum(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getColumnDomain(exeReq, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "sum", [ "v0"], { "axes":"z" } )
 
     @classmethod
-    def executeYearlyMeans(cls, levelIndex):
-        cls.executeCacheRequest(levelIndex)
+    def executeYearlyMeans(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getTimeseriesDomain( exeReq, levelIndex, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getTimeseriesDomain( exeReq, 'd0' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], {  "period":"12", "unit":"month" } )
 
     @classmethod
-    def executeYearlyCycle(cls, levelIndex):
-        cls.executeCacheRequest(levelIndex)
+    def executeYearlyCycle(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getTimeseriesDomain( exeReq, levelIndex, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getTimeseriesDomain( exeReq, 'd0' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], { "period":"1", "unit":"month", "mod":"12" } )
 
     @classmethod
-    def executeSeasonalCycle(cls, levelIndex):
-        cls.executeCacheRequest(levelIndex)
+    def executeSeasonalCycle(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getTimeseriesDomain( exeReq, levelIndex, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getTimeseriesDomain( exeReq, 'd0' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "timeBin", [ "v0"], { "period":"3", "unit":"month", "mod":"4", "offset":"2"   } )
 
     @classmethod
-    def executeSpatialAve(cls, levelIndex):
-        cls.executeCacheRequest(levelIndex)
+    def executeSpatialAve(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getSpatialDomain( exeReq, levelIndex, 'd0' )
-        cls.getMerraAtmosVariable(exeReq, "v0", "ta", "d0" )
+        cls.getSpatialDomain( exeReq, 'd0' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "average", [ "v0"], { "axes":"xy", "weights": "cosine" } )
 
     @classmethod
