@@ -169,6 +169,6 @@ class CDASDemo:
         cls.executeRequest(exeReq, "CDS", "metadata", [] )
 
 if __name__ == "__main__":
-    CDASDemo.executeAnomaly()
+    CDASDemo.executeCacheRequest()
 
 
