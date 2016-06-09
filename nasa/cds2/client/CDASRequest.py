@@ -41,7 +41,7 @@ class CDASDemo:
         return d
 
     @classmethod
-    def getCacheDomain( cls, exeReq, id ):
+    def getFullDomain( cls, exeReq, id ):
         d = Domain(id=id)
         exeReq.addDomain( d )
         return d
@@ -76,8 +76,8 @@ class CDASDemo:
     @classmethod
     def executeCacheRequest( cls ):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getCacheDomain( exeReq, 'dc' )
-        cls.getMerraAtmosVariable( exeReq, "v0", "tas", "dc" )
+        cls.getFullDomain( exeReq, 'dc' )
+        cls.getMerraLandVariable( exeReq, "v0", "SFMC", "dc" )
         cls.executeRequest( exeReq, "util", "cache", [ "v0"] )
 
     @classmethod
