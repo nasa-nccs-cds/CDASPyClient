@@ -15,6 +15,16 @@ class CDASDemo:
         return d
 
     @classmethod
+    def getTimeseriesDomain( cls, exeReq, level_index, id ):
+        d = Domain(id=id)
+        lat = Axis( id="lat", start=20, end=20, system="values")
+        lon = Axis( id="lon", start=20, end=20, system="values")
+        lev = Axis( id="lev", start=level_index, end=level_index, system="indices")
+        for axis in [lat,lon,lev]: d.addAxis ( axis )
+        exeReq.addDomain( d )
+        return d
+
+    @classmethod
     def getSpatialDomain( cls, exeReq, id ):
         d = Domain(id=id)
         time = Axis( id="time", start=4, end=4, system="indices")
@@ -68,6 +78,12 @@ class CDASDemo:
         return v
 
     @classmethod
+    def getMerraAsmVariable( cls, exeReq, uId, varId, domainId ):
+        v = Variable( uid=uId, uri="collection://merra300/hourly/asm_Cp", varname=varId, domain_id=domainId )
+        exeReq.addInputVariable( v )
+        return v
+
+    @classmethod
     def executeRequest( cls, exeReq, pkg, operation, input_uids, vargs={}, run_async=False ):
         op = Operation( package=pkg, kernel=operation, input_uids=input_uids, args=vargs )
         exeReq.addOperation( op )
@@ -81,10 +97,24 @@ class CDASDemo:
         cls.executeRequest( exeReq, "util", "cache", [ "v0"] )
 
     @classmethod
+    def executeCacheRequestDesktop( cls, level_index=3 ):
+        exeReq = CDASExecuteRequest(server,port)
+        cls.getCacheDomain( exeReq, level_index, 'd0' )
+        cls.getMerraAsmVariable( exeReq, "v0", "t", "d0" )
+        cls.executeRequest( exeReq, "util", "cache", [ "v0"] )
+
+    @classmethod
     def executeAnomaly(cls):
         exeReq = CDASExecuteRequest(server,port)
         cls.getTimeseriesDomain(exeReq, 'd0' )
         cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
+        cls.executeRequest(exeReq, "CDS", "anomaly", [ "v0"], { "axes":"t" } )
+
+    @classmethod
+    def executeAnomalyDesktop(cls, level_index=3 ):
+        exeReq = CDASExecuteRequest(server,port)
+        cls.getTimeseriesDomain(exeReq, level_index, 'd0' )
+        cls.getMerraAsmVariable( exeReq, "v0", "t", "d0" )
         cls.executeRequest(exeReq, "CDS", "anomaly", [ "v0"], { "axes":"t" } )
 
     @classmethod
