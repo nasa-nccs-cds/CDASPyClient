@@ -6,7 +6,7 @@ port = 9000
 class CDASDemo:
 
     @classmethod
-    def getTimeseriesDomain( cls, exeReq, id ):
+    def getTimeseriesLandDomain( cls, exeReq, id ):
         d = Domain(id=id)
         lat = Axis( id="lat", start=20, end=20, system="values")
         lon = Axis( id="lon", start=20, end=20, system="values")
@@ -106,7 +106,7 @@ class CDASDemo:
     @classmethod
     def executeAnomaly(cls):
         exeReq = CDASExecuteRequest(server,port)
-        cls.getTimeseriesDomain(exeReq, 'd0' )
+        cls.getTimeseriesLandDomain(exeReq, 'd0' )
         cls.getMerraLandVariable( exeReq, "v0", "SFMC", "d0" )
         cls.executeRequest(exeReq, "CDS", "anomaly", [ "v0"], { "axes":"t" } )
 
